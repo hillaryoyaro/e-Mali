@@ -141,3 +141,9 @@ main::-webkit-scrollbar{
   font-family: Roboto !important;
   color: var(--color-828599);
 }
+
+/**styling the className error**/
+.error {
+  color: red;
+  font-size: 12px;
+}
