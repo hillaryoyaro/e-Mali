@@ -6,6 +6,7 @@ const asyncHandler = require("express-async-handler");
 const validateMongoDbId = require("../utils/validateMongodbId");
 const uniqid = require("uniqid");
 
+//Creating Order from the user
 const createOrder = asyncHandler(async (req, res, next) => {
     try {
         const { COD, couponApplied } = req.body;
@@ -70,19 +71,36 @@ const createOrder = asyncHandler(async (req, res, next) => {
     }
 });
 
-//Get Order
+//Get Order from user
 const getOrders = asyncHandler(async(req, res) => {
     const { _id } = req.user;
     validateMongoDbId(_id);
     try {
         const userOrders = await Order.findOne({ orderedBy: _id })
             .populate("products.product")
+            .populate("orderedBy")
             .exec();
         res.json(userOrders);
     } catch(error) {
         throw new Error(error);
     }
 });
+
+//get all order by Admin
+const getAllOrders = asyncHandler(async (req, res) => {
+    try {
+      const allUserOrders = await Order.find()
+        .populate('orderedBy')
+        .populate('products.product')
+        .sort('-createdAt')
+        .exec();
+      res.json(allUserOrders);
+    } catch (error) {
+      throw new Error(error);
+    }
+  });
+  
+
 
 const updateOrderStatus = asyncHandler(async(req, res) => {
     const { status } = req.body;
@@ -104,4 +122,4 @@ const updateOrderStatus = asyncHandler(async(req, res) => {
         throw new Error(error);
     }
 });
-module.exports = { createOrder,getOrders,updateOrderStatus };
+module.exports = { createOrder,getOrders,updateOrderStatus,getAllOrders };

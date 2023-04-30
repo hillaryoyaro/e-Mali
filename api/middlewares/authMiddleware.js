@@ -5,7 +5,7 @@ const asynchandler = require("express-async-handler");
 // authMiddleware -->Geting the user object
 const authMiddleware = asynchandler(async(req,res,next) => {
     let token;
-    if(req?.headers?.authorization.startsWith('Bearer')){
+    if(req?.headers?.authorization?.startsWith('Bearer')){
         token = req.headers.authorization.split(" ")[1];
         try{
             //if token is found,find the user from decoded token
